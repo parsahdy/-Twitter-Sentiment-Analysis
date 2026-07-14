@@ -219,3 +219,7 @@ __marimo__/
 
 data/*
 !data/.gitkeep
+
+
+mlflow.db/
+src/mlflow.db/
