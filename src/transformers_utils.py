@@ -3,19 +3,14 @@ import numpy as np
 from datasets import Dataset
 from transformers import AutoTokenizer
 
-from data import load_data, train_test_split_data
-from config import FILE_PATH, CHECKPOINT, TRANSFORMER_TOKENIZER_PATH
+from config import CHECKPOINT, TRANSFORMER_TOKENIZER_PATH
 
-
-df = load_data(FILE_PATH)
-X_test, X_test, y_train, y_test = train_test_split_data(df, text_col="Clean_Text",
-                                             label_col="Label")
 
 tokenizer_path = TRANSFORMER_TOKENIZER_PATH
-tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+hf_tokenizer  = AutoTokenizer.from_pretrained(tokenizer_path)
 
 def tokenizer(batch):
-    return tokenizer(
+    return hf_tokenizer (
         batch["text"],
         truncation=True,
         padding="max_length",
@@ -38,14 +33,14 @@ def build_train_test_dataset(X_train, X_test, y_train, y_test, tokenizer):
     test_dataset = test_dataset.map(tokenizer, batched=True)
 
 
-    train_dataset.set_fromat(
+    train_dataset.set_format(
         type="torch",
-        columns=["input_ids", "attention_mask", "label"]
+        columns=["input_ids", "attention_mask", "labels"]
     )
 
-    test_dataset.set_fromat(
+    test_dataset.set_format(
         type="torch",
-        columns=["input_ids", "attention_mask", "label"]
+        columns=["input_ids", "attention_mask", "labels"]
     )
 
     return train_dataset, test_dataset
