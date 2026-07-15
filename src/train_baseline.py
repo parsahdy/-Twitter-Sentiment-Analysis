@@ -53,8 +53,11 @@ for C in [0.1, 1.0, 10.0]:
             "C": C
         }
 
-        mlflow.log_param(params)
-        mlflow.log_metric(metrics)
+        for k, v in params.items():
+            mlflow.log_param(k, v)
+
+        for k, v in metrics.items():
+            mlflow.log_metric(k, v)
 
         mlflow.sklearn.log_model(model, "model")
 
